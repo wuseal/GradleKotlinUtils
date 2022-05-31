@@ -36,7 +36,7 @@ dependencies {
     // Use the Kotlin JUnit integration.
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit")
 }
-group = "wu.seal.tools"
+group = "io.github.wuseal"
 version = "1.0.0"
 
 pluginBundle {
@@ -47,7 +47,7 @@ pluginBundle {
 gradlePlugin {
     // Define the plugin
     val gradleKotlinUtils by plugins.creating {
-        id = "wu.seal.gradle.utils"
+        id = "io.github.wuseal.utils"
         implementationClass = "wu.seal.tools.gradle.KotlinUtilsPlugin"
         displayName = "Gradle Kotlin Utils"
         description = "Add Utils for build.gradle.kts and settings.gradle.kts"
