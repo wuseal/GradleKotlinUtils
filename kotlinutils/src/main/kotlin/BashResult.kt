@@ -65,7 +65,7 @@ fun String.runCommand(): Result<Unit> {
         inputStream.reader().useLines {
             it.forEach { println(it) }
         }
-        waitFor(-1, TimeUnit.HOURS)
+        waitFor()
         if (exitValue() == 0) {
             Result.success(Unit)
         } else {

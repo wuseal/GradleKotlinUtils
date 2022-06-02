@@ -8,7 +8,7 @@ This is a plugin for gradle settings and projects, that's means that you can app
 
 ```kotlin
 plugins {
-    id("io.github.wuseal.utils") version "1.0.0"
+    id("io.github.wuseal.utils") version "1.0.1"
 }
 ```
 
@@ -16,7 +16,7 @@ plugins {
 
 ```kotlin
 plugins {
-    id("io.github.wuseal.utils") version "1.0.0"
+    id("io.github.wuseal.utils") version "1.0.1"
 }
 ```
 
