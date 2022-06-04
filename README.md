@@ -28,14 +28,14 @@ After apply this plugin, you can
 * Use pre functions in any `*.gradle.kts` that applied in settings.gradle.kts and build.gradle.kts
 
 ### Demos
-Gson demo
+Gson demo in `buld.gradle.kts` or `settings.gradle.kts`
 ```kotlin
 Gson().toJson(Pair(123, 456))
 
 prettyJsonGson.fromJson<Pair<Int, Int>>("{\"first\":1,\"second\":2}")
 ```
 
-Command Run demo
+Command Run demo in `build.gradle.kts` or `settings.gradle.kts`
 
 ```kotlin
 "ls".runCommand()
@@ -44,7 +44,7 @@ println("cat /Users/user/Scripts/TempGradleProject/build.gradle.kts".evalBash())
 
 ```
 
-In other gradle.kts that applied in settings.gradle.kts or build.gradle.kts
+In other *.gradle.kts that applied in settings.gradle.kts or build.gradle.kts
 
 Firstly, declare the functions in `*.gradle.kts`
 ```kotlin
