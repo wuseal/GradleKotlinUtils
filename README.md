@@ -9,7 +9,7 @@ It can let you use `Gson` in build.gradle.kts and settings.gradle.kts and provid
 
 ```kotlin
 plugins {
-    id("io.github.wuseal.utils") version "1.0.2"
+    id("io.github.wuseal.utils") version "1.0.3"
 }
 ```
 
@@ -17,7 +17,7 @@ plugins {
 
 ```kotlin
 plugins {
-    id("io.github.wuseal.utils") version "1.0.2"
+    id("io.github.wuseal.utils") version "1.0.3"
 }
 ```
 
