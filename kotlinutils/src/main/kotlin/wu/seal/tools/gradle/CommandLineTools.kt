@@ -1,28 +1,47 @@
+package wu.seal.tools.gradle
 /**
  * Created by wuseal in 2022-0528
  */
 
+import org.gradle.process.ExecSpec
 import wu.seal.tools.gradle.KotlinUtilsPlugin.Companion.processOperations
 import java.io.File
 import java.util.concurrent.TimeUnit
 
-fun String.evalBash(): Result<String> {
-    return runCommandInner(0) {
+@JvmName("evalBashForKotlinStringExtension")
+fun String.evalBash(showOutput: Boolean = false, wd: File? = null): BashResult {
+    return evalBash(this, showOutput, wd)
+}
+fun evalBash(cmd: String, showOutput: Boolean = false, wd: File? = null): BashResult {
+    return cmd.runCommand(0) {
         redirectOutput(ProcessBuilder.Redirect.PIPE)
         redirectInput(ProcessBuilder.Redirect.PIPE)
         redirectError(ProcessBuilder.Redirect.PIPE)
+        wd?.let { directory(it) }
     }.run {
-        val stdout = inputStream.reader().readLines().joinToString("\n")
-        val stderr = errorStream.reader().readLines().joinToString("\n")
+        val stdout = inputStream.reader().readLines()
+        val stderr = errorStream.reader().readLines()
         waitFor(1, TimeUnit.HOURS)
         val exitCode = exitValue()
-        if (exitCode == 0) Result.success(stdout)
-        else Result.failure(Exception("$exitCode:Execute command failed with exit code $exitCode:\n$stderr))"))
+        BashResult(exitCode, stdout, stderr).also {
+            if (showOutput) {
+                if (exitCode == 0) {
+                    println(it.sout())
+                } else {
+                    println(it.serr())
+                }
+            }
+        }
     }
 }
+fun BashResult.throwIfError(): BashResult {
+    if (this.exitCode != 0) {
+        throw kotlin.RuntimeException("Process exec error ${toString()}")
+    }
+    return this
+}
 
-
-internal fun String.runCommandInner(
+fun String.runCommand(
     timeoutValue: Long = 60,
     timeoutUnit: TimeUnit = TimeUnit.MINUTES,
     processConfig: ProcessBuilder.() -> Unit = {}
@@ -41,12 +60,13 @@ internal fun String.runCommandInner(
     }
 }
 
-fun String.runCommand(): Result<Unit> {
+fun String.runCommandWithGradle(config : ExecSpec.()->Unit): Result<Unit> {
     val thisProcessOperations = processOperations
     if (thisProcessOperations != null) {
         val execResult = try {
             thisProcessOperations.exec {
-                commandLine("/bin/bash", "-c", this@runCommand)
+                commandLine("/bin/bash", "-c", this)
+                config()
             }
         } catch (e: Exception) {
             return Result.failure(e)
@@ -56,21 +76,8 @@ fun String.runCommand(): Result<Unit> {
         } else {
             return Result.failure(IllegalStateException("Command exit with none 0 code: ${execResult.exitValue}"))
         }
-    }
-    return runCommandInner(0) {
-        redirectOutput(ProcessBuilder.Redirect.PIPE)
-        redirectInput(ProcessBuilder.Redirect.PIPE)
-        redirectErrorStream(true)
-    }.run {
-        inputStream.reader().useLines {
-            it.forEach { println(it) }
-        }
-        waitFor()
-        if (exitValue() == 0) {
-            Result.success(Unit)
-        } else {
-            Result.failure(IllegalStateException("Command exit with none 0 code: ${exitValue()}"))
-        }
+    }else{
+        throw IllegalStateException("You are not apply this plugin, please apply it before you use [runCommandWithGradle] function")
     }
 }
 

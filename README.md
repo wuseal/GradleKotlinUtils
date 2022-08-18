@@ -2,13 +2,14 @@
 
 This is a plugin for gradle settings and projects, that's means that you can apply it in `settings.gradle.kts` and `build.gradle.kts`
 
+It can let you use `Gson` in build.gradle.kts and settings.gradle.kts and provided a easy function to run shell commmand line
 ## Usage
 
 ### Apply in settings.gradle.kts
 
 ```kotlin
 plugins {
-    id("io.github.wuseal.utils") version "1.0.1"
+    id("io.github.wuseal.utils") version "1.0.2"
 }
 ```
 
@@ -16,7 +17,7 @@ plugins {
 
 ```kotlin
 plugins {
-    id("io.github.wuseal.utils") version "1.0.1"
+    id("io.github.wuseal.utils") version "1.0.2"
 }
 ```
 

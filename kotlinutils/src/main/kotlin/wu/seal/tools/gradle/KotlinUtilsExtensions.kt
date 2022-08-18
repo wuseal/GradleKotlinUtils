@@ -1,4 +1,7 @@
+package wu.seal.tools.gradle
 import com.google.gson.Gson
+
+
 
 /**
  * create by wuseal on 2022-0528
@@ -14,6 +17,6 @@ inline fun <reified T> Gson.fromJson(json: String): T? {
     }
 }
 
-internal fun <T> String.fromJson(clazz: Class<T>): T = prettyJsonGson.fromJson<T>(this, clazz)
+fun <T> String.fromJson(clazz: Class<T>): T = prettyJsonGson.fromJson<T>(this, clazz)
 
-internal fun <T> T.toJson():String = prettyJsonGson.toJson(this)
+fun <T> T.toJson():String = prettyJsonGson.toJson(this)

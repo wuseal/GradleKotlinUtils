@@ -3,8 +3,7 @@
  */
 package wu.seal.tools.gradle
 
-import evalBash
-import fromJson
+
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.initialization.Settings
@@ -12,8 +11,6 @@ import org.gradle.api.internal.ProcessOperations
 import org.gradle.api.plugins.ExtensionAware
 import org.gradle.internal.service.ServiceRegistry
 import org.gradle.kotlin.dsl.support.serviceOf
-import runCommand
-import toJson
 
 /**
  * Add Utils plugin, and use directly in setting.gradle.kts
@@ -39,6 +36,24 @@ class KotlinUtilsPlugin : Plugin<ExtensionAware> {
             processOperations = extensionAware.serviceOf<ServiceRegistry>().get(ProcessOperations::class.java)
         }
 
+        fun String.runCommandForExtension() =
+            runCommand().run {
+                if (exitValue() == 0) {
+                    Result.success(Unit)
+                } else {
+                    Result.failure(IllegalStateException("Command exit with none 0 code: ${exitValue()}"))
+                }
+            }
+
+        fun String.evalBashForExtension() =
+            evalBash().run {
+                if (exitCode == 0) {
+                    Result.success(sout())
+                } else {
+                    Result.failure(Exception("$exitCode:Execute command failed with exit code $exitCode:\n$stderr))"))
+                }
+            }
+
         extensionAware.extensions.apply {
             //add Json Convert Util
             val fromJsonFunType: String.(Class<Any>) -> Any = String::fromJson
@@ -47,11 +62,11 @@ class KotlinUtilsPlugin : Plugin<ExtensionAware> {
             add("toJson", toJsonFunType)
 
             //add run Bash Util
-            val runCommandFunType: String.() -> Result<Unit> = String::runCommand
+            val runCommandFunType: String.() -> Result<Unit> = String::runCommandForExtension
             add("runCommand", runCommandFunType)
 
             //add eval bash util
-            val evalBashFunType: String.() -> Result<String> = String::evalBash
+            val evalBashFunType: String.() -> Result<String> = String::evalBashForExtension
             add("evalBash", evalBashFunType)
         }
     }
