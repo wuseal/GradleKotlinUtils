@@ -36,14 +36,7 @@ class KotlinUtilsPlugin : Plugin<ExtensionAware> {
             processOperations = extensionAware.serviceOf<ServiceRegistry>().get(ProcessOperations::class.java)
         }
 
-        fun String.runCommandForExtension() =
-            runCommand().run {
-                if (exitValue() == 0) {
-                    Result.success(Unit)
-                } else {
-                    Result.failure(IllegalStateException("Command exit with none 0 code: ${exitValue()}"))
-                }
-            }
+        fun String.runCommandForExtension() = runCommandWithGradle{}
 
         fun String.evalBashForExtension() =
             evalBash().run {

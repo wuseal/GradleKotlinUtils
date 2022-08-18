@@ -37,7 +37,7 @@ dependencies {
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit")
 }
 group = "io.github.wuseal"
-version = "1.0.4"
+version = "1.0.5"
 
 pluginBundle {
     website = "https://github.com/wuseal/GradleKotlinUtils"
