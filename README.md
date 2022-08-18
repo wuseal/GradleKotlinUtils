@@ -17,7 +17,7 @@ plugins {
 
 ```kotlin
 plugins {
-    id("io.github.wuseal.utils") version "1.0.3"
+    id("io.github.wuseal.utils") version "1.0.4"
 }
 ```
 

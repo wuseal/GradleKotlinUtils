@@ -37,7 +37,7 @@ dependencies {
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit")
 }
 group = "io.github.wuseal"
-version = "1.0.3"
+version = "1.0.4"
 
 pluginBundle {
     website = "https://github.com/wuseal/GradleKotlinUtils"
@@ -58,6 +58,10 @@ gradlePlugin {
 val functionalTestSourceSet = sourceSets.create("functionalTest") {
 }
 
+java {
+    withSourcesJar()
+    withJavadocJar()
+}
 gradlePlugin.testSourceSets(functionalTestSourceSet)
 configurations["functionalTestImplementation"].extendsFrom(configurations["testImplementation"])
 
