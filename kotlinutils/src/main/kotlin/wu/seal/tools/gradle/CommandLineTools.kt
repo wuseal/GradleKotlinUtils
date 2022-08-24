@@ -65,7 +65,7 @@ fun String.runCommandWithGradle(config : ExecSpec.()->Unit): Result<Unit> {
     if (thisProcessOperations != null) {
         val execResult = try {
             thisProcessOperations.exec {
-                commandLine("/bin/bash", "-c", this)
+                commandLine("/bin/bash", "-c", this@runCommandWithGradle)
                 config()
             }
         } catch (e: Exception) {
