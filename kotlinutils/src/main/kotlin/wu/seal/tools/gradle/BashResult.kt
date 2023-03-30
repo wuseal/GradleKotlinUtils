@@ -25,5 +25,16 @@ data class BashResult(val exitCode: Int, val stdout: Iterable<String>, val stder
         return this
     }
 
+    fun getOrThrow(): String {
+        return if (exitCode == 0) sout() else throw RuntimeException(serr())
+    }
+
+    override fun toString(): String {
+        return """
+            exitCode: $exitCode
+            stdout: ${sout()}
+            stderr: ${serr()}
+        """.trimIndent()
+    }
 
 }

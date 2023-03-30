@@ -1,4 +1,5 @@
 package wu.seal.tools.gradle
+
 /**
  * Created by wuseal in 2022-0528
  */
@@ -12,6 +13,7 @@ import java.util.concurrent.TimeUnit
 fun String.evalBash(showOutput: Boolean = false, wd: File? = null): BashResult {
     return evalBash(this, showOutput, wd)
 }
+
 fun evalBash(cmd: String, showOutput: Boolean = false, wd: File? = null): BashResult {
     return cmd.runCommand(0) {
         redirectOutput(ProcessBuilder.Redirect.PIPE)
@@ -34,6 +36,31 @@ fun evalBash(cmd: String, showOutput: Boolean = false, wd: File? = null): BashRe
         }
     }
 }
+
+fun String.evalBash(
+    timeoutValue: Long = 60,
+    timeoutUnit: TimeUnit = TimeUnit.MINUTES,
+    processConfig: ProcessBuilder.() -> Unit
+): BashResult {
+    //same like evalBash but with more config
+    return this.runCommand(timeoutValue, timeoutUnit) {
+        redirectOutput(ProcessBuilder.Redirect.PIPE)
+        redirectInput(ProcessBuilder.Redirect.PIPE)
+        redirectError(ProcessBuilder.Redirect.PIPE)
+        processConfig()
+    }.run {
+        val stdout = inputStream.reader().readLines()
+        val stderr = errorStream.reader().readLines()
+        if (timeoutValue > 0L) {
+            waitFor(timeoutValue, timeoutUnit)
+        } else {
+            waitFor()
+        }
+        val exitCode = exitValue()
+        BashResult(exitCode, stdout, stderr)
+    }
+}
+
 fun BashResult.throwIfError(): BashResult {
     if (this.exitCode != 0) {
         throw kotlin.RuntimeException("Process exec error ${toString()}")
@@ -60,7 +87,7 @@ fun String.runCommand(
     }
 }
 
-fun String.runCommandWithGradle(config : ExecSpec.()->Unit): Result<Unit> {
+fun String.runCommandWithGradle(config: ExecSpec.() -> Unit): Result<Unit> {
     val thisProcessOperations = processOperations
     if (thisProcessOperations != null) {
         val execResult = try {
@@ -76,7 +103,7 @@ fun String.runCommandWithGradle(config : ExecSpec.()->Unit): Result<Unit> {
         } else {
             return Result.failure(IllegalStateException("Command exit with none 0 code: ${execResult.exitValue}"))
         }
-    }else{
+    } else {
         throw IllegalStateException("You are not apply this plugin, please apply it before you use [runCommandWithGradle] function")
     }
 }
